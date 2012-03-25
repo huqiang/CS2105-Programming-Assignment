@@ -12,12 +12,13 @@ public class UDPServer {
 		port = p;
 	}
 	
-	public void run() throws SocketException{
+	public void run() throws IOException{
 		isRun = true;
 		DatagramSocket skt = new DatagramSocket(port);
 		byte[] inBuf = new byte[60002];
 		while(isRun){
 			DatagramPacket inPkt = new DatagramPacket(inBuf, inBuf.length);
+			skt.receive(inPkt);
 			
 		}
 	}

@@ -27,11 +27,11 @@ public class UDPClient {
 		}
 	}
 	
-	public boolean sendFile(String filePath, byte[] addr, int port){
+	public boolean sendFile(String filePath, String addr, String port){
 		File theFile = new File(filePath);
 		InetAddress ad = null;
 		try {
-			ad = InetAddress.getByAddress(addr);
+			ad = InetAddress.getByName(addr);
 		} catch (UnknownHostException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -57,7 +57,7 @@ public class UDPClient {
 			data[1] = (i == numOfSegs)?(byte)0:(byte)1;
 			seq = i;
 			System.arraycopy(seg, 0, data, 2, seg.length);
-			DatagramPacket outPkt = new DatagramPacket(data, data.length,ad,port);
+			DatagramPacket outPkt = new DatagramPacket(data, data.length,ad,Integer.parseInt(port));
 //			if(!sendPacket(outPkt)){
 //				sendPacket(outPkt);
 //			}
