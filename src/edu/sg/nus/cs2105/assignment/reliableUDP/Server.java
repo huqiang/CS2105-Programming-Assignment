@@ -63,9 +63,9 @@ public class Server {
 			    }
 			}
 //		System.out.print("please input the interface number you want to use and a port number");
-		Scanner sc = new Scanner(System.in);
+//		Scanner sc = new Scanner(System.in);
 //		int addr = sc.nextInt();
-		int port = sc.nextInt();
+//		int port = sc.nextInt();
 //		
 //		
 //		System.out.println("Your local address is: "+ips[addr]);
@@ -75,9 +75,14 @@ public class Server {
 //			System.out.println("Please inpu portnumber");
 //		}
 //		else{
-			UDPServer server = new UDPServer(port);
-			server.run();
+		UDPServer server;
+		if (args.length == 1){
+			server = new UDPServer(Integer.parseInt(args[0]));
+		}
+		else
+			server = new UDPServer(args[0],Integer.parseInt(args[1]));
 //		}
+		server.run();
 		
 	
 	}

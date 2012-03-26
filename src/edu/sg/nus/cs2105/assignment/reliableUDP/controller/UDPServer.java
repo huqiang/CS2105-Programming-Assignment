@@ -14,6 +14,13 @@ public class UDPServer {
 		skt = new DatagramSocket(p);
 	}
 	
+	public UDPServer(String add, int p) throws SocketException, UnknownHostException{
+		port = p;
+		
+		System.out.println("The address is:"+add);
+		skt = new DatagramSocket(p, InetAddress.getByName(add));
+	}
+	
 	public void run() throws IOException{
 		System.out.println("the local address is: "+skt.getLocalAddress());
 		System.out.println("the local socketAddress is: "+skt.getLocalSocketAddress());
