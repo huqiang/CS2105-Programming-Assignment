@@ -29,6 +29,7 @@ public class UDPClient {
 	}
 	
 	public boolean sendFile(String filePath, String addr, String port) throws IOException{
+		System.out.println("[" + filePath + "]");
 		File theFile = new File(filePath);
 		InetAddress ad = null;
 		try {
@@ -39,7 +40,7 @@ public class UDPClient {
 		}
 
 		FileInputStream fin = null;
-		if(fin==null)
+//		if(fin==null)
 		try{
 			fin = new FileInputStream(theFile);
 //			fileContent = new byte[(int)theFile.length()];
@@ -47,9 +48,6 @@ public class UDPClient {
 		}
 		catch(FileNotFoundException e){
 			System.out.println("File not found"+e);
-		}
-		catch (IOException ioe){
-			System.out.println("Exception while reading the file"+ioe);
 		}
 		
 //		initiate connection with server, sending info about the file.
@@ -60,33 +58,45 @@ public class UDPClient {
 //		int numOfSegs = fileContent.length/SEG_SIZE;
 		byte[] fileContent = new byte[SEG_SIZE];
 		for(int i = 0; i < totalSegNum;){
-			fin.read(fileContent, i*SEG_SIZE, SEG_SIZE);
-			byte[] data = new byte[SEG_SIZE+2];
-			data[0] = (byte)i+1;
+			System.out.println("This is segment: "+i);
+			fin.read(fileContent, 0, SEG_SIZE);
+			byte[] data = new byte[SEG_SIZE+1];
+			data[0] = (byte)(i+1);
 			currentSegNum = i+1;
 			System.arraycopy(fileContent, 0, data, 1, fileContent.length);
+//			System.out.println(data);
 			DatagramPacket outPkt = new DatagramPacket(data, data.length,ad,Integer.parseInt(port));
 			boolean result = sendPacket(outPkt);
-			if(!result)
+			if(!result){
 				result = sendPacket(outPkt);
+				System.out.println("resending package+"+i);
+				
+			}
 			i++;
 		}
-		return false;
+		fin.close();
+		return true;
 	}
 	
 	private void initConnection(File theFile, InetAddress ad, int port) {
 		// TODO Auto-generated method stub
+		System.out.println("inside initConnection");
 		byte[] data = new byte[SEG_SIZE+2];
 		byte[] fileName = theFile.getName().getBytes();
-		totalSegNum = (int) Math.ceil(theFile.length()/SEG_SIZE);
+		totalSegNum = (int) Math.ceil(theFile.length()/SEG_SIZE)+1;
+		System.out.println("The file name is"+fileName+"  file length = "+theFile.length()+" totalSegNum = "+totalSegNum);
 		data[0] = (byte)0;
 		data[1] = (byte)totalSegNum;
 		currentSegNum = 0;
 		System.arraycopy(fileName, 0, data, 2, fileName.length);
 		DatagramPacket outPkt = new DatagramPacket(data, data.length, ad, port);
 		boolean result = sendPacket(outPkt);
-		if(!result)
-			result = sendPacket(outPkt);			
+		if(!result){
+			System.out.println("resending init request");
+			result = sendPacket(outPkt);	
+			
+		}
+		System.out.println("Connection established");
 	}
 
 	private boolean sendPacket(DatagramPacket pkt){
