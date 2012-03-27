@@ -49,7 +49,7 @@ public class UDPClient {
 		catch(FileNotFoundException e){
 			System.out.println("File not found"+e);
 		}
-		
+		System.out.println(filePath+addr+port);
 //		initiate connection with server, sending info about the file.
 		initConnection(theFile, ad, Integer.parseInt(port));
 		

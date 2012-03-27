@@ -6,6 +6,7 @@ import java.io.*;
 
 public class UDPServer {
 	private int port;
+	String folder;
 	boolean isRun = true;
 	int SEG_SIZE = 60001;
 	DatagramSocket skt;
@@ -14,18 +15,18 @@ public class UDPServer {
 		skt = new DatagramSocket(p);
 	}
 	
-	public UDPServer(String add, int p) throws SocketException, UnknownHostException{
+	public UDPServer(String add, int p, String path) throws SocketException, UnknownHostException{
 		port = p;
-		
+		folder = path;
 		System.out.println("The address is:"+add);
 		skt = new DatagramSocket(p, InetAddress.getByName(add));
 	}
 	
 	public void run() throws IOException{
-		System.out.println("the local address is: "+skt.getLocalAddress());
-		System.out.println("the local socketAddress is: "+skt.getLocalSocketAddress());
-		System.out.println("the local port is: "+skt.getLocalPort());
-		System.out.println("the local inetAddress is: "+skt.getInetAddress());
+//		System.out.println("the local address is: "+skt.getLocalAddress());
+//		System.out.println("the local socketAddress is: "+skt.getLocalSocketAddress());
+//		System.out.println("the local port is: "+skt.getLocalPort());
+//		System.out.println("the local inetAddress is: "+skt.getInetAddress());
 		isRun = true;
 		byte[] inBuf = new byte[SEG_SIZE];
 		while(isRun){
@@ -40,7 +41,7 @@ public class UDPServer {
 				int totalSegNum = data[1];
 				String fileName = new String(data, 2, data.length-2);
 				System.out.println("In server, the filename: "+fileName+" Total packs are: "+ totalSegNum);
-				FileOutputStream fou = new FileOutputStream("received_"+fileName);
+				FileOutputStream fou = new FileOutputStream(folder+"/"+fileName);
 				sendAck(0, inPkt.getAddress(), inPkt.getPort());
 				for(int i = 1; i <= totalSegNum;){
 					System.out.println("In server, received package: "+i);
