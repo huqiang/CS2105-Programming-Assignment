@@ -369,14 +369,14 @@ public class DisplayUDP extends javax.swing.JFrame {
   	      @Override
   	      protected void done(){
   	                  
-  	        responseText.append("\nFile received, and surver stoped!\n");
+  	        responseText.append("Stopped\n");
   	      }
   	    };
         
  	client.setInformable(new Informable(){
 	      @Override
 	      public void messageChanged(String message){
-	        serverStatus.append(message+"\n");
+	        responseText.append(message+"\n");
 //	        textArea.append(message + "\n");
 	      }
 	    });
@@ -412,7 +412,7 @@ public class DisplayUDP extends javax.swing.JFrame {
     	      @Override
     	      protected void done(){
     	                  
-    	        serverStatus.append("File received, and surver stoped!\n");
+    	        serverStatus.append("Server stoped!\n");
     	      }
     	    };;
     	Informable informable = new Informable(){
@@ -535,14 +535,7 @@ public class DisplayUDP extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//
-//            public void run() {
-//                new DisplayUDP().setVisible(true);
-//            }
-//        });
-//    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField FilePathText;
     private javax.swing.JButton browseButton;
@@ -611,16 +604,6 @@ private JFileChooser chooser;
     public synchronized void getServerResponse(final String s){
     	System.out.println("Get responce fron controller"+s);
     	serverStatus.append(s);
-//    	 new Thread(new Runnable()
-//    	  {
-//    	    SwingUtilities.invokeLater(new Runnable() 
-//    	    {
-//    	      public void run()
-//    	      {
-//    	    	  serverStatus.append(s);
-//    	      }
-//    	    });
-//    	  }).start();
     }
     
     public synchronized void  getClientResponse(String s){

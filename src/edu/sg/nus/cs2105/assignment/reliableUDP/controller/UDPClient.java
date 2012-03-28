@@ -18,8 +18,6 @@ import edu.sg.nus.cs2105.assignment.reliableUDP.model.Parser;
 
 public class UDPClient extends SwingWorker<String, String> {
 	private DatagramSocket skt;
-//	private InetAddress server;
-//	int port;
 	int currentSegNum;
 	int totalSegNum;
 	final int SEG_SIZE = 60000;
@@ -68,12 +66,11 @@ public class UDPClient extends SwingWorker<String, String> {
 		initConnection(theFile, ad, Integer.parseInt(port));
 		
 		
-//		Assume that numOfSegs will be smaller than 128, indicating the file size is smaller than 128*60000 < 7GB.
-//		int numOfSegs = fileContent.length/SEG_SIZE;
+//		The First three bytes in datagram are used as segment number, the max size is 60000*127^3/1024/1024/1024 = 114.46GB 
 		publish("Start sending file");
 		byte[] fileContent = new byte[SEG_SIZE];
 		for(int i = 0; i < totalSegNum;){
-			System.out.println("This is segment: "+i);
+			publish(String.format("Receiving package: %d , progress = %.2f%%", i, i*0.1/(totalSegNum*0.1)* 100));
 			fin.read(fileContent, 0, SEG_SIZE);
 			byte[] data = new byte[SEG_SIZE+3];
 //			data[0] = (byte)(i+1);
@@ -203,7 +200,8 @@ public class UDPClient extends SwingWorker<String, String> {
 		publish("Start sending file");
 		byte[] fileContent = new byte[SEG_SIZE];
 		for(int i = 0; i < totalSegNum;){
-			System.out.println("This is segment: "+i);
+//			System.out.println("This is segment: "+i);
+			publish(String.format("Sending package: %d , progress = %.2f%%", i, i*0.1/(totalSegNum*0.1)* 100));
 			fin.read(fileContent, 0, SEG_SIZE);
 			byte[] data = new byte[SEG_SIZE+3];
 //			data[0] = (byte)(i+1);

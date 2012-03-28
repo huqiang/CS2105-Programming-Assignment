@@ -27,12 +27,22 @@ public class UDPServer extends SwingWorker<String, String>{
 		skt = new DatagramSocket(p);
 	}
 	
-	public UDPServer(String add, int p, String path) throws SocketException, UnknownHostException{
+	public UDPServer(String add, int p, String path) {
 		port = p;
 		folder = path;
 		System.out.println("The address is:"+add);
 //		view.getServerResponse("The address is: "+add+"\n");
-		skt = new DatagramSocket(port, InetAddress.getByName(add));
+		try {
+			skt = new DatagramSocket(port, InetAddress.getByName(add));
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			publish(e.getMessage());
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			publish(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 	
 
@@ -84,7 +94,8 @@ public class UDPServer extends SwingWorker<String, String>{
 				sendAck(0, inPkt.getAddress(), inPkt.getPort());
 				for(int i = 1; i <= totalSegNum;){
 					System.out.println("In server, received package: "+i);
-					publish("Receiving package: "+i);
+					
+					publish(String.format("Receiving package: %d , progress = %.2f%%", i, i*0.1/(totalSegNum*0.1)* 100));
 					inPkt = new DatagramPacket(inBuf, inBuf.length);
 					skt.receive(inPkt);
 					data = inPkt.getData();
@@ -95,8 +106,8 @@ public class UDPServer extends SwingWorker<String, String>{
 						i++;
 					}
 				}
-				fou.close();
 				publish( "Finished receiving!");
+				fou.close();
 			}
 			
 		}
