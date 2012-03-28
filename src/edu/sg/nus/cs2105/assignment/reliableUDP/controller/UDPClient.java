@@ -101,6 +101,7 @@ public class UDPClient {
 
 	private boolean sendPacket(DatagramPacket pkt){
 		byte inBuf[] = new byte[1];
+		int counter = 0;
 		DatagramPacket inPkt = new DatagramPacket(inBuf, 1);
 		try {
 			skt.send(pkt);
@@ -109,7 +110,12 @@ public class UDPClient {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			return false;
+			if (counter < 10){
+				System.out.println("resenting");
+				sendPacket(pkt);
+				
+			}
+			else System.out.println("senting failed");
 		}
 		
 		if (inBuf[0] != (byte)currentSegNum)

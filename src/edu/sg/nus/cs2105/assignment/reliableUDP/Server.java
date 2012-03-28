@@ -80,7 +80,7 @@ public class Server {
 			server = new UDPServer(Integer.parseInt(args[0]));
 		}
 		else
-			server = new UDPServer(args[0],Integer.parseInt(args[1]));
+			server = new UDPServer(args[0],Integer.parseInt(args[1]) ,"./");
 //		}
 		server.run();
 		
