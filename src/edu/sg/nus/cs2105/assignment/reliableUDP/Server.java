@@ -82,7 +82,7 @@ public class Server {
 		else
 			server = new UDPServer(args[0],Integer.parseInt(args[1]) ,"./");
 //		}
-		server.run();
+		server.execute();
 		
 	
 	}

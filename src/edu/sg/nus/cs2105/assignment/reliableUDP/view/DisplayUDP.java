@@ -18,9 +18,11 @@ import java.util.logging.Logger;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 
 import edu.sg.nus.cs2105.assignment.reliableUDP.controller.UDPClient;
 import edu.sg.nus.cs2105.assignment.reliableUDP.controller.UDPServer;
+import edu.sg.nus.cs2105.assignment.reliableUDP.event.Informable;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -49,8 +51,8 @@ public class DisplayUDP extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainPanel = new javax.swing.JTabbedPane();
-        clientPanel = new javax.swing.JPanel();
+        clientPanel = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
         serverIpText = new javax.swing.JTextField();
         serverPortText = new javax.swing.JTextField();
         FilePathText = new javax.swing.JTextField();
@@ -71,18 +73,18 @@ public class DisplayUDP extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        serverStatus = new javax.swing.JTextPane();
+        serverStatus = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        mainPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+        clientPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                mainPanelMouseClicked(evt);
+                clientPanelMouseClicked(evt);
             }
         });
-        mainPanel.addFocusListener(new java.awt.event.FocusAdapter() {
+        clientPanel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                mainPanelFocusGained(evt);
+                clientPanelFocusGained(evt);
             }
         });
 
@@ -128,7 +130,12 @@ public class DisplayUDP extends javax.swing.JFrame {
         sendButton.setText("send");
         sendButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sendButtonMouseClicked(evt);
+                try {
+					sendButtonMouseClicked(evt);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
 
@@ -141,46 +148,46 @@ public class DisplayUDP extends javax.swing.JFrame {
         jLabel3.setText("File Path: ");
         jLabel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        javax.swing.GroupLayout clientPanelLayout = new javax.swing.GroupLayout(clientPanel);
-        clientPanel.setLayout(clientPanelLayout);
-        clientPanelLayout.setHorizontalGroup(
-            clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(clientPanelLayout.createSequentialGroup()
-                .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(clientPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jScrollPane1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, clientPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(serverPortText)
                             .addComponent(serverIpText, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE)
-                            .addGroup(clientPanelLayout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(FilePathText, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(browseButton))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, clientPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                         .addGap(218, 218, 218)
                         .addComponent(sendButton)))
                 .addContainerGap())
         );
-        clientPanelLayout.setVerticalGroup(
-            clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(clientPanelLayout.createSequentialGroup()
-                .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverIpText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverPortText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(5, 5, 5)
-                .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(FilePathText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(browseButton))
@@ -188,10 +195,10 @@ public class DisplayUDP extends javax.swing.JFrame {
                 .addComponent(sendButton)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        mainPanel.addTab("client", clientPanel);
+        clientPanel.addTab("client", jPanel1);
 
         serverPanel.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -227,7 +234,15 @@ public class DisplayUDP extends javax.swing.JFrame {
         runButton.setText("Run");
         runButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                runButtonMouseClicked(evt);
+                try {
+					runButtonMouseClicked(evt);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             }
         });
         runButton.addActionListener(new java.awt.event.ActionListener() {
@@ -257,7 +272,7 @@ public class DisplayUDP extends javax.swing.JFrame {
                 .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(serverPanelLayout.createSequentialGroup()
                         .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
                             .addGroup(serverPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -266,15 +281,15 @@ public class DisplayUDP extends javax.swing.JFrame {
                             .addGroup(serverPanelLayout.createSequentialGroup()
                                 .addGap(136, 136, 136)
                                 .addComponent(runButton))
-                            .addComponent(clientPortText, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
+                            .addComponent(clientPortText, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, serverPanelLayout.createSequentialGroup()
-                                .addComponent(receiverPath, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+                                .addComponent(receiverPath, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(setPathButton))
-                            .addComponent(clientIpText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE))
+                            .addComponent(clientIpText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(serverPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE)
                         .addGap(47, 47, 47))))
         );
         serverPanelLayout.setVerticalGroup(
@@ -297,10 +312,10 @@ public class DisplayUDP extends javax.swing.JFrame {
                 .addComponent(runButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        mainPanel.addTab("server", serverPanel);
+        clientPanel.addTab("server", serverPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -308,13 +323,13 @@ public class DisplayUDP extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE))
+                .addComponent(clientPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                .addComponent(clientPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
         );
 
         pack();
@@ -347,8 +362,24 @@ public class DisplayUDP extends javax.swing.JFrame {
 
     private void sendButtonMouseClicked(java.awt.event.MouseEvent evt) throws IOException {//GEN-FIRST:event_sendButtonMouseClicked
         responseText.setText(serverIp + "\n" + serverPort + "\n" + FilePath);
-        UDPClient client = new UDPClient ();
-        client.sendFile(FilePath, serverIp, serverPort);
+        UDPClient client = new UDPClient (FilePath, serverIp, serverPort){
+  	       // This method is invoked when the worker is finished
+  	       // its task
+  	      @Override
+  	      protected void done(){
+  	                  
+  	        responseText.append("File received, and surver stoped!\n");
+  	      }
+  	    };
+        
+ 	client.setInformable(new Informable(){
+	      @Override
+	      public void messageChanged(String message){
+	        serverStatus.append(message+"\n");
+//	        textArea.append(message + "\n");
+	      }
+	    });
+ 	client.execute();
         
     }//GEN-LAST:event_sendButtonMouseClicked
 
@@ -374,13 +405,29 @@ public class DisplayUDP extends javax.swing.JFrame {
     }//GEN-LAST:event_runButtonActionPerformed
 
     private void runButtonMouseClicked(java.awt.event.MouseEvent evt) throws NumberFormatException, IOException {//GEN-FIRST:event_runButtonMouseClicked
-    	UDPServer server = new UDPServer(clientIp, Integer.parseInt(clientPort), recPath);
-    	server.run();
+    	UDPServer server = new UDPServer(clientIp, Integer.parseInt(clientPort), recPath){
+    	       // This method is invoked when the worker is finished
+    	       // its task
+    	      @Override
+    	      protected void done(){
+    	                  
+    	        serverStatus.append("File received, and surver stoped!\n");
+    	      }
+    	    };;
+    	Informable informable = new Informable(){
+    	      @Override
+    	      public void messageChanged(String message){
+    	        serverStatus.append(message+"\n");
+//    	        textArea.append(message + "\n");
+    	      }
+    	    };
+    	server.setInformable(informable);
+    	server.execute();
     }//GEN-LAST:event_runButtonMouseClicked
 
-    private void mainPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_mainPanelFocusGained
+    private void clientPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clientPanelFocusGained
         // TODO add your handling code here:
-    }//GEN-LAST:event_mainPanelFocusGained
+    }//GEN-LAST:event_clientPanelFocusGained
 
     private void serverPanelFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_serverPanelFocusGained
         try {
@@ -433,7 +480,7 @@ public class DisplayUDP extends javax.swing.JFrame {
         
     }//GEN-LAST:event_serverPanelFocusGained
 
-    private void mainPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mainPanelMouseClicked
+    private void clientPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clientPanelMouseClicked
         // TODO add your handling code here:
          try {
             
@@ -482,7 +529,7 @@ public class DisplayUDP extends javax.swing.JFrame {
         } catch (SocketException ex) {
             Logger.getLogger(DisplayUDP.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_mainPanelMouseClicked
+    }//GEN-LAST:event_clientPanelMouseClicked
 
     /**
      * @param args the command line arguments
@@ -499,7 +546,7 @@ public class DisplayUDP extends javax.swing.JFrame {
     private javax.swing.JTextField FilePathText;
     private javax.swing.JButton browseButton;
     private javax.swing.JTextField clientIpText;
-    private javax.swing.JPanel clientPanel;
+    private javax.swing.JTabbedPane clientPanel;
     private javax.swing.JTextField clientPortText;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -507,9 +554,9 @@ public class DisplayUDP extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTabbedPane mainPanel;
     private javax.swing.JTextField receiverPath;
     private javax.swing.JTextArea responseText;
     private javax.swing.JButton runButton;
@@ -517,7 +564,7 @@ public class DisplayUDP extends javax.swing.JFrame {
     private javax.swing.JTextField serverIpText;
     private javax.swing.JPanel serverPanel;
     private javax.swing.JTextField serverPortText;
-    private javax.swing.JTextPane serverStatus;
+    private javax.swing.JTextArea serverStatus;
     private javax.swing.JButton setPathButton;
     // End of variables declaration//GEN-END:variables
 private JFileChooser chooser;
@@ -533,7 +580,7 @@ private JFileChooser chooser;
         chooser.setCurrentDirectory(new java.io.File("."));
         chooser.setDialogTitle("Select FIle");
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        if (chooser.showOpenDialog(mainPanel) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showOpenDialog(clientPanel) == JFileChooser.APPROVE_OPTION) {
             FilePath = chooser.getSelectedFile().getAbsolutePath();
             FilePathText.setText(FilePath);
 
@@ -548,7 +595,7 @@ private JFileChooser chooser;
         chooser.setDialogTitle("Select Path");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         try {
-            if (chooser.showOpenDialog(mainPanel) == JFileChooser.APPROVE_OPTION) {
+            if (chooser.showOpenDialog(clientPanel) == JFileChooser.APPROVE_OPTION) {
                 recPath = chooser.getSelectedFile().getCanonicalPath();
                 receiverPath.setText(recPath);
 
@@ -558,5 +605,24 @@ private JFileChooser chooser;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    public synchronized void getServerResponse(final String s){
+    	System.out.println("Get responce fron controller"+s);
+    	serverStatus.append(s);
+//    	 new Thread(new Runnable()
+//    	  {
+//    	    SwingUtilities.invokeLater(new Runnable() 
+//    	    {
+//    	      public void run()
+//    	      {
+//    	    	  serverStatus.append(s);
+//    	      }
+//    	    });
+//    	  }).start();
+    }
+    
+    public synchronized void  getClientResponse(String s){
+    	responseText.append(s);
     }
 }

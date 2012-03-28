@@ -23,9 +23,9 @@ public class Client {
 			System.out.println("please input ports.......");
 		}
 		else{
-			UDPClient client = new UDPClient();
+			UDPClient client = new UDPClient(args[0],args[1],args[2]);
 			System.out.println(args[0]+ args[1]+ args[2]);
-			client.sendFile(args[0], args[1], args[2]);
+			client.execute();
 		}
 	}
 

@@ -11,15 +11,28 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-public class UDPClient {
+import javax.swing.SwingWorker;
+
+import edu.sg.nus.cs2105.assignment.reliableUDP.event.Informable;
+import edu.sg.nus.cs2105.assignment.reliableUDP.view.DisplayUDP;
+
+public class UDPClient extends SwingWorker<String, String> {
 	private DatagramSocket skt;
 //	private InetAddress server;
 //	int port;
 	int currentSegNum;
 	int totalSegNum;
 	final int SEG_SIZE = 60000;
+	private final String filePath;
+	private final String addr;
+	private final String port;
 	
-	public UDPClient() {
+	private Informable informable;
+	
+	public UDPClient(String f, String a, String p) {
+		this.filePath = f;
+		this.addr = a;
+		this.port = p;
 		try{
 			skt = new DatagramSocket();
 			
@@ -40,22 +53,22 @@ public class UDPClient {
 		}
 
 		FileInputStream fin = null;
-//		if(fin==null)
 		try{
 			fin = new FileInputStream(theFile);
-//			fileContent = new byte[(int)theFile.length()];
-//			fin.read(fileContent);
+
 		}
 		catch(FileNotFoundException e){
-			System.out.println("File not found"+e);
+			publish("File not found"+e);
 		}
 		System.out.println(filePath+addr+port);
+		
 //		initiate connection with server, sending info about the file.
 		initConnection(theFile, ad, Integer.parseInt(port));
 		
 		
 //		Assume that numOfSegs will be smaller than 128, indicating the file size is smaller than 128*60000 < 7GB.
 //		int numOfSegs = fileContent.length/SEG_SIZE;
+		publish("Start sending file");
 		byte[] fileContent = new byte[SEG_SIZE];
 		for(int i = 0; i < totalSegNum;){
 			System.out.println("This is segment: "+i);
@@ -75,6 +88,7 @@ public class UDPClient {
 			i++;
 		}
 		fin.close();
+		publish("done");
 		return true;
 	}
 	
@@ -84,7 +98,7 @@ public class UDPClient {
 		byte[] data = new byte[SEG_SIZE+2];
 		byte[] fileName = theFile.getName().getBytes();
 		totalSegNum = (int) Math.ceil(theFile.length()/SEG_SIZE)+1;
-		System.out.println("The file name is"+fileName+"  file length = "+theFile.length()+" totalSegNum = "+totalSegNum);
+		publish("The file name is"+fileName+"  file length = "+theFile.length()+" totalSegNum = "+totalSegNum);
 		data[0] = (byte)0;
 		data[1] = (byte)totalSegNum;
 		currentSegNum = 0;
@@ -92,7 +106,7 @@ public class UDPClient {
 		DatagramPacket outPkt = new DatagramPacket(data, data.length, ad, port);
 		boolean result = sendPacket(outPkt);
 		if(!result){
-			System.out.println("resending init request");
+			publish("resending init request");
 			result = sendPacket(outPkt);	
 			
 		}
@@ -122,5 +136,24 @@ public class UDPClient {
 		return false;
 		
 		else return true;
+	}
+	
+	public void setInformable(Informable ifm){
+		this.informable = ifm;
+	}
+	
+	
+	@Override
+	  protected void process(List<String> chunks){
+	    for(String message : chunks){
+	      informable.messageChanged(message);
+	    }
+	  }
+
+	@Override
+	protected String doInBackground() throws Exception {
+		// TODO Auto-generated method stub
+		sendFile(filePath, addr, port);
+		return "done";
 	}
 }
