@@ -6,7 +6,6 @@ import java.net.*;
 import edu.sg.nus.cs2105.assignment.reliableUDP.controller.UDPServer;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
-import java.util.Scanner;
 
 public class Server {
 

@@ -25,7 +25,8 @@ public class Client {
 		else{
 			UDPClient client = new UDPClient(args[0],args[1],args[2]);
 			System.out.println(args[0]+ args[1]+ args[2]);
-			client.execute();
+//			client.execute();
+			client.sendFile(args[0], args[1], args[2]);
 		}
 	}
 

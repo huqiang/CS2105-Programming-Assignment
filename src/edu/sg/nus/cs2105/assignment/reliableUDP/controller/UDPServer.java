@@ -6,6 +6,7 @@ import java.io.*;
 import javax.swing.SwingWorker;
 
 import edu.sg.nus.cs2105.assignment.reliableUDP.event.Informable;
+import edu.sg.nus.cs2105.assignment.reliableUDP.model.Parser;
 import edu.sg.nus.cs2105.assignment.reliableUDP.view.DisplayUDP;
 
 
@@ -13,9 +14,9 @@ public class UDPServer extends SwingWorker<String, String>{
 	private int port;
 	String folder;
 	boolean isRun = true;
-	int SEG_SIZE = 60001;
+	int SEG_SIZE = 60003;
 	DatagramSocket skt;
-	
+	private static final int SYN = -1;
 	DisplayUDP view;
 	
 	private Informable informable;
@@ -37,8 +38,10 @@ public class UDPServer extends SwingWorker<String, String>{
 
 	private void sendAck(int i, InetAddress inetAdd, int port) throws IOException {
 		// TODO Auto-generated method stub
-		byte[] outBuf = new byte[1];
-		outBuf[0] = (byte)i;
+		byte[] outBuf = new byte[3];
+		Parser parser = new Parser(i);
+		System.arraycopy(parser.getByteValue(), 0, outBuf, 0, 3);
+		
 		DatagramPacket outPacket = new DatagramPacket(
 				outBuf, outBuf.length, inetAdd,
 				port);
@@ -69,12 +72,12 @@ public class UDPServer extends SwingWorker<String, String>{
 			skt.receive(inPkt);
 			byte[] data = inPkt.getData();
 //			This should be the first package, to init connection with server.
-			if(data[0] != 0){
+			if(data[0] != SYN){
 				
 			}
 			else {
-				int totalSegNum = data[1];
-				String fileName = new String(data, 2, data.length-2);
+				int totalSegNum = getTotalNumber(data);
+				String fileName = new String(data, 4, data.length-4);
 				System.out.println("In server, the filename: "+fileName+" Total packs are: "+ totalSegNum);
 				publish("The incomming file is: "+fileName+" total number of segment is: "+totalSegNum);
 				FileOutputStream fou = new FileOutputStream(folder+"/"+fileName);
@@ -85,9 +88,9 @@ public class UDPServer extends SwingWorker<String, String>{
 					inPkt = new DatagramPacket(inBuf, inBuf.length);
 					skt.receive(inPkt);
 					data = inPkt.getData();
-					System.out.println(data);
-					if(data[0] == i){
-						fou.write(data, 1, data.length-1);
+//					System.out.println(data);
+					if(new Parser( getThreeBytes(data) ).getIntValue() == i){
+						fou.write(data, 3, data.length-3);
 						sendAck(i, inPkt.getAddress(), inPkt.getPort());
 						i++;
 					}
@@ -100,10 +103,25 @@ public class UDPServer extends SwingWorker<String, String>{
 		return "Terminated";
 	}
 	
+	private int getTotalNumber(byte[] data) {
+		// TODO Auto-generated method stub
+		return ((int)data[1])*127*127+
+				((int)data[2])*127+
+				(int)data[3];
+	}
+
+	private byte[] getThreeBytes(byte[] data) {
+		// TODO Auto-generated method stub
+		byte[] result = new byte[3];
+		System.arraycopy(data, 0, result, 0, 3);
+		return result;
+	}
+
 	@Override
 	  protected void process(List<String> chunks){
 	    for(String message : chunks){
 	      informable.messageChanged(message);
+	      System.out.println(message);
 	    }
 	  }
 	
