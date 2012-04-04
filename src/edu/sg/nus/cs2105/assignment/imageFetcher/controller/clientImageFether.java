@@ -77,7 +77,7 @@ public class clientImageFether {
                 System.out.println("Socket opened to " + webHost + "\n");
 
                 OutputStreamWriter outWriter = new OutputStreamWriter(clientSocket.getOutputStream());
-                outWriter.write("GET " + file + " HTTP/1.1\r\nHost: " + webHost + "\n\n");
+                outWriter.write("GET " + file + " HTTP/1.0\r\nHost: " + webHost + "\n\n");
                 outWriter.flush();
                 System.out.println("Done writing!");
                 InputStream in = clientSocket.getInputStream();
@@ -91,34 +91,47 @@ public class clientImageFether {
                 String httpFile = null;
                 boolean more = true;
                 String input;
+                boolean start = false;
 
-                while (more) {
-                    //read one line at a time
-                    input = br.readLine();
-                    System.out.println(input+'\n');
-                    //print the line if any
-                    if (input==null) {
-                        System.out.println("EOF");
-                        more = false;
-                    } else {
-                        httpFile += input+"\n";
-//                        System.out.println("Inside wile(more) loop: "+httpFile);
+                while((input = br.readLine()) != null){
+                    if(input.isEmpty()) start = true;
+                    System.out.println(input);
+                    if (start){
+                        httpFile += input;
                     }
                 }
-                System.out.println("Print out whole httpFile: "+httpFile);
-                int httpLength = httpFile.length();
+                System.out.println(httpFile);
+//                while (more) {
+//                    //read one line at a time
+//                    input = br.readLine();
+//
+//                    //print the line if any
+//                    if (input.isEmpty()){
+//                        System.out.println("This is an empty line!!");
+//                    }
+//                    if (input==null) {
+//                        System.out.println("EOF");
+//                        more = false;
+//                    } else {
+//                        httpFile += input+"\n";
+//                    }
+//                }
+                
+//                System.out.println("Print out whole httpFile: "+httpFile);
+//                String header = getRequestHeaders(httpFile);
+//                int httpLength = httpFile.length();
                 byte[] httpByteFile = httpFile.getBytes();
                 int httpByteFileLength = httpByteFile.length;
-                int contentStart = 0;
-                for (int i = 3; i < httpLength; i++) {
-                    if (httpByteFile[i - 3] == 13 && httpByteFile[i - 2] == 10 && httpByteFile[i - 1] == 13 && httpByteFile[i] == 10) //                buffer[bytesRead]=(byte)reader.read();
-                    {
-                        System.out.println("Find a bitch!! at: " + i);
-                        contentStart = i;
-                    }
-                }
+//                int contentStart = 0;
+//                for (int i = 3; i < httpLength; i++) {
+//                    if (httpByteFile[i - 3] == 13 )// && httpByteFile[i - 2] == 10) //                buffer[bytesRead]=(byte)reader.read();
+//                    {
+//                        System.out.println("Find a bitch!! at: " + i);
+//                        contentStart = i;
+//                    }
+//                }
                 try {
-                    writer.write(httpByteFile, contentStart, httpByteFileLength - contentStart);
+                    writer.write(httpByteFile, 4, httpByteFileLength-4);
                     //                while(buffer[bytesRead]!=-1){
                     //                	buffer[bytesRead++]=(byte)reader.read();
                     //                }
@@ -172,7 +185,7 @@ public class clientImageFether {
                 //                byte[] tmp = new byte[153600];
                 //                System.arraycopy(buffer, 263, tmp, 0, buffer.length-263);
 
-                System.out.println(httpByteFileLength + "\n\n" + contentStart + "\n");
+//                System.out.println(httpByteFileLength + "\n\n" + contentStart + "\n");
 
 
 //                writer.write(buffer, 263, bytesRead-263);
