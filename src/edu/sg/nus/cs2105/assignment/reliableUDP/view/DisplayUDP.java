@@ -561,7 +561,7 @@ public class DisplayUDP extends javax.swing.JFrame {
     private javax.swing.JTextArea serverStatus;
     private javax.swing.JButton setPathButton;
     // End of variables declaration//GEN-END:variables
-private JFileChooser chooser;
+    private JFileChooser chooser;
     private String serverIp = null;
     private String serverPort = null;
     private String FilePath = null;

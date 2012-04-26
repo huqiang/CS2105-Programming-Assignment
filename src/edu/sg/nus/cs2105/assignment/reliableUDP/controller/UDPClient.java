@@ -133,20 +133,12 @@ public class UDPClient extends SwingWorker<String, String> {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-//			if (counter < 10){
-//				publish("resenting :"+counter+" time!");
-//				sendPacket(pkt);
-//				
-//			}
-			publish("senting failed");
+			publish("resending!!");
+			sendPacket(pkt);
 		}
 		
-//		parser = new Parser(inBuf);
 		if (new Parser(inBuf).getIntValue() == currentSegNum)
 			return true;
-		
-//		if (counter >= 10)
-//				return false;
 		
 		return false;
 	}
